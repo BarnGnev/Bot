@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.CRITICAL)
 for lib in ("aiogram", "aiogram.dispatcher", "asyncio"):
     logging.getLogger(lib).setLevel(logging.CRITICAL)
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8410763877:AAHIJhv7L4HjZBUMund8Nh_VjhV1M0NSq1U")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 DATA_FILE = "data.json"
 ADMINS_FILE = "admins.json"
 
@@ -47,7 +47,7 @@ def load_admins() -> list:
     """Загружает администраторов"""
     if not os.path.exists(ADMINS_FILE):
         admins = [{
-            "login": "Bludu455",
+            "login": "Adminka",
             "password_hash": hash_pw("gTa8p4S1qWh8I5IQIxS33EHUYlWnyQAu"),
             "created": "по умолчанию",
             "super": True
@@ -327,4 +327,5 @@ if __name__ == "__main__":
         print(traceback.format_exc())
         add_log("CRITICAL", f"Критическая ошибка: {e}")
     finally:
+
         print("✅ Бот полностью остановлен")
