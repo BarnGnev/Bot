@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 ApexDLC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+          --r:#ff4d6d;--rl:#ff6b85;--g:#2ecc71;--gd:#27ae60;
+          --bg:#0e1015;--card:#161b24;--card2:#1e2535;--inp:#0a0d12;
+          --tx:#e8eaf0;--mt:#6b7280;--br:rgba(255,77,109,.18);
+          --sh:0 8px 32px rgba(0,0,0,.4);
+          --grad:linear-gradient(135deg,#ff4d6d 0%,#c0392b 35%,#27ae60 70%,#1a6e40 100%);
+          --gsoft:linear-gradient(135deg,rgba(255,77,109,.1),rgba(46,204,113,.1));
+        }
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+        body::before{content:'';position:fixed;inset:0;background:
+          radial-gradient(ellipse at 10% 20%,rgba(255,77,109,.05) 0%,transparent 50%),
+          radial-gradient(ellipse at 90% 80%,rgba(46,204,113,.06) 0%,transparent 50%);
+          pointer-events:none;z-index:0}
+        .petal{position:fixed;border-radius:50% 0 50% 0;opacity:.12;animation:fall linear infinite;pointer-events:none;z-index:0}
+        @keyframes fall{0%{transform:translateY(-40px) rotate(0deg);opacity:.15}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+        header{position:sticky;top:0;z-index:100;background:rgba(14,16,21,.92);backdrop-filter:blur(20px);
+          border-bottom:1px solid var(--br);padding:0 28px;height:60px;
+          display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 20px rgba(0,0,0,.4)}
+        .logo{font-family:'Playfair Display',serif;font-size:1.3rem;
+          background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          display:flex;align-items:center;gap:8px}
+        .sub-badge{background:var(--grad);color:#fff;padding:5px 14px;border-radius:20px;
+          font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(46,204,113,.25)}
+        .role-tag{padding:4px 12px;border-radius:10px;font-size:.78rem;font-weight:600;
+          background:rgba(255,77,109,.1);color:var(--r);border:1px solid var(--br)}
+        .app{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px);position:relative;z-index:1}
+        aside{background:var(--card);border-right:1px solid var(--br);padding:20px 12px;display:flex;flex-direction:column;gap:2px}
+        .ns{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#374151;padding:12px 10px 5px;margin-top:6px}
+        .ni{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;cursor:pointer;
+          font-size:.88rem;font-weight:500;color:#9ca3af;transition:all .2s;border:none;background:none;width:100%;text-align:left}
+        .ni:hover{background:rgba(255,77,109,.08);color:var(--r)}
+        .ni.active{background:var(--grad);color:#fff;box-shadow:0 4px 16px rgba(255,77,109,.25)}
+        .ni .ic{font-size:1rem;width:20px;text-align:center}
+        main{padding:28px;overflow-y:auto}
+        .page{display:none}.page.active{display:block;animation:fi .25s ease}
+        @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+        .ptitle{font-family:'Playfair Display',serif;font-size:1.65rem;margin-bottom:5px;
+          background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .psub{color:var(--mt);font-size:.85rem;margin-bottom:22px}
+        .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+        .sc{background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:var(--sh);border:1px solid var(--br);position:relative;overflow:hidden}
+        .sc::before{content:'';position:absolute;top:0;right:0;width:70px;height:70px;border-radius:0 18px 0 70px;opacity:.12}
+        .sc:nth-child(1)::before{background:var(--r)}.sc:nth-child(2)::before{background:var(--g)}
+        .sc:nth-child(3)::before{background:#3b82f6}.sc:nth-child(4)::before{background:#e67e22}
+        .sl{font-size:.78rem;color:var(--mt);font-weight:500}
+        .sv{font-size:1.9rem;font-weight:700;margin-top:3px}
+        .sc:nth-child(1) .sv{color:var(--r)}.sc:nth-child(2) .sv{color:var(--gd)}
+        .sc:nth-child(3) .sv{color:#3b82f6}.sc:nth-child(4) .sv{color:#e67e22}
+        .card{background:var(--card);border-radius:18px;padding:22px;box-shadow:var(--sh);border:1px solid var(--br);margin-bottom:18px}
+        .ctitle{font-size:.95rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:7px;color:var(--tx)}
+        input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--br);border-radius:10px;
+          font-size:.88rem;font-family:'DM Sans',sans-serif;color:var(--tx);background:var(--inp);outline:none;transition:all .2s}
+        input:focus,textarea:focus,select:focus{border-color:var(--rl);box-shadow:0 0 0 3px rgba(255,77,109,.08)}
+        textarea{resize:vertical;min-height:90px}
+        label{display:block;font-size:.75rem;font-weight:600;margin-bottom:5px;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em}
+        .field{margin-bottom:14px}.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+        .btn{padding:10px 20px;border-radius:10px;font-size:.87rem;font-weight:600;
+          font-family:'DM Sans',sans-serif;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+        .btn-p{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(255,77,109,.25)}
+        .btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,77,109,.35)}
+        .btn-g{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;box-shadow:0 4px 14px rgba(46,204,113,.25)}
+        .btn-g:hover{transform:translateY(-2px)}
+        .btn-d{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;box-shadow:0 4px 10px rgba(231,76,60,.25)}
+        .btn-o{background:transparent;border:1.5px solid var(--br);color:#9ca3af}
+        .btn-o:hover{border-color:var(--rl);color:var(--r)}
+        .btn-sm{padding:6px 13px;font-size:.78rem;border-radius:8px}
+        .chi{display:flex;align-items:center;gap:11px;padding:11px 14px;background:var(--inp);
+          border-radius:10px;margin-bottom:7px;border:1px solid var(--br)}
+        .ch-icon{width:34px;height:34px;border-radius:50%;background:var(--grad);
+          display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;flex-shrink:0}
+        .ch-name{font-weight:600;font-size:.87rem}.ch-id{font-size:.75rem;color:var(--mt)}
+        .tw{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:.85rem}
+        th{padding:9px 13px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
+          color:var(--mt);background:var(--inp);border-bottom:1px solid var(--br)}
+        td{padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+        tr:hover td{background:rgba(255,77,109,.04)}
+        code{background:var(--inp);padding:2px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.78rem}
+        .badge{padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600}
+        .bg{background:#0d2e1e;color:#2ecc71}.br2{background:#2e0d13;color:#ff6b85}
+        .bgr{background:#1e2535;color:#9ca3af}.bo{background:#2e1f0d;color:#f39c12}
+        .bbl{background:#0d1f3a;color:#3b82f6;border:1px solid rgba(59,130,246,.2)}
+        .trow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+        .tl{font-weight:500;font-size:.88rem}.ts{font-size:.78rem;color:var(--mt);margin-top:2px}
+        .sw{position:relative;width:46px;height:25px}.sw input{display:none}
+        .sl2{position:absolute;inset:0;background:#2a2a3a;border-radius:25px;cursor:pointer;transition:.3s}
+        .sl2::before{content:'';position:absolute;width:19px;height:19px;left:3px;top:3px;
+          background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+        input:checked+.sl2{background:var(--g)}
+        input:checked+.sl2::before{transform:translateX(21px)}
+        .console{background:#080b10;border-radius:14px;font-family:'JetBrains Mono',monospace;
+          font-size:.78rem;height:440px;overflow-y:auto;border:1px solid rgba(255,77,109,.15)}
+        .ch2{background:#0d1117;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.05);
+          display:flex;align-items:center;gap:7px;position:sticky;top:0;z-index:2}
+        .cd{width:9px;height:9px;border-radius:50%}
+        .cd.r{background:#ff5f57}.cd.y{background:#febc2e}.cd.g{background:#28c840}
+        .ctit{font-size:.72rem;color:#374151;margin-left:5px;letter-spacing:.05em}
+        .cb{padding:12px 16px}
+        .console::-webkit-scrollbar{width:4px}
+        .console::-webkit-scrollbar-track{background:#080b10}
+        .console::-webkit-scrollbar-thumb{background:#1e2535;border-radius:3px}
+        .ll{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:flex-start;gap:9px;line-height:1.5}
+        .ll:last-child{border-bottom:none}
+        .lt{color:#2d3340;min-width:135px;font-size:.7rem;padding-top:1px}
+        .lb{font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:4px;min-width:46px;text-align:center;letter-spacing:.04em}
+        .lb.info{background:rgba(46,204,113,.12);color:#2ecc71;border:1px solid rgba(46,204,113,.18)}
+        .lb.warn{background:rgba(241,196,15,.1);color:#f1c40f;border:1px solid rgba(241,196,15,.18)}
+        .lb.error{background:rgba(255,77,109,.1);color:#ff4d6d;border:1px solid rgba(255,77,109,.18)}
+        .lm{color:#cdd6f4;flex:1}.lu{color:#2d3340;font-size:.68rem;white-space:nowrap}
+        .tabrow{display:flex;gap:7px;margin-bottom:14px}
+        .tab{padding:7px 16px;border-radius:18px;font-size:.82rem;font-weight:600;cursor:pointer;
+          border:1.5px solid var(--br);background:var(--card);color:#9ca3af;transition:all .2s}
+        .tab.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(255,77,109,.2)}
+        #toast{position:fixed;bottom:28px;right:28px;background:var(--inp);color:var(--tx);
+          padding:12px 20px;border-radius:12px;font-size:.87rem;font-weight:500;
+          box-shadow:0 8px 32px rgba(0,0,0,.4);border:1px solid var(--br);z-index:9999;
+          transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:7px}
+        #toast.show{transform:translateY(0);opacity:1}
+        .empty{text-align:center;padding:32px;color:var(--mt)}.empty .ei{font-size:2.5rem;margin-bottom:10px}
+        /* Admin list item */
+        .adm-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--inp);
+          border-radius:10px;margin-bottom:8px;border:1px solid var(--br)}
+        .adm-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);
+          display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0}
+        .adm-name{font-weight:600;font-size:.88rem}
+        .adm-sub{font-size:.75rem;color:var(--mt)}
+    </style>
+</head>
+<body>
+<script>
+    const pc=['#ff4d6d','#2ecc71','#ff6b85','#a8f0c6','#ff9ff3'];
+    for(let i=0;i<16;i++){
+      const p=document.createElement('div');p.className='petal';
+      p.style.cssText=`left:${Math.random()*100}%;background:${pc[i%pc.length]};animation-duration:${9+Math.random()*12}s;animation-delay:${Math.random()*10}s;width:${7+Math.random()*9}px;height:${10+Math.random()*13}px;`;
+      document.body.appendChild(p);
+    }
+</script>
+
+<header>
+    <div class="logo"><span>🌸</span> ApexDLC</div>
+    <div style="display:flex;align-items:center;gap:12px">
+        <div class="sub-badge">🌱 Подписчиков: <b id="subCount">—</b></div>
+        <div class="role-tag" id="role-tag">👑 Админ</div>
+        <button class="btn btn-o btn-sm" onclick="logout()">🚪 Выйти</button>
+    </div>
+</header>
+
+<div class="app">
+    <aside>
+        <div class="ns">Управление</div>
+        <button class="ni active" onclick="go('dashboard',this)"><span class="ic">🏠</span> Главная</button>
+        <button class="ni" onclick="go('channels',this)"><span class="ic">📢</span> Каналы</button>
+        <button class="ni" onclick="go('broadcast',this)"><span class="ic">📨</span> Рассылка</button>
+        <button class="ni" onclick="go('reply',this)"><span class="ic">💬</span> Ответ пользователю</button>
+        <div class="ns">Пользователи</div>
+        <button class="ni" onclick="go('users',this)"><span class="ic">👥</span> Участники</button>
+        <button class="ni" onclick="go('settings',this)"><span class="ic">⚙️</span> Настройки</button>
+        <div class="ns">Администраторы</div>
+        <button class="ni" id="nav-admins" onclick="go('admins',this)"><span class="ic">🛡️</span> Администраторы</button>
+        <button class="ni" onclick="go('logs',this)"><span class="ic">🖥️</span> Консоль</button>
+    </aside>
+
+    <main>
+
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+            <div class="ptitle">🌸 Панель управления</div>
+            <div class="psub">Обзор вашего Telegram бота</div>
+            <div class="sgrid">
+                <div class="sc"><div class="sl">Всего пользователей</div><div class="sv" id="st-total">—</div></div>
+                <div class="sc"><div class="sl">Получили ссылку</div><div class="sv" id="st-sub">—</div></div>
+                <div class="sc"><div class="sl">В канале сейчас</div><div class="sv" id="st-inch">—</div></div>
+                <div class="sc"><div class="sl">Заблокировано</div><div class="sv" id="st-banned">—</div></div>
+            </div>
+            <div class="card">
+                <div class="ctitle">🔗 Ссылка на файл</div>
+                <div class="field"><input id="d-url" placeholder="https://t.me/... или любая ссылка"></div>
+                <button class="btn btn-p" onclick="saveQuick()">💾 Сохранить</button>
+            </div>
+            <div class="card">
+                <div class="ctitle">📢 Подключённые каналы</div>
+                <div id="dash-channels"></div>
+            </div>
+        </div>
+
+        <!-- CHANNELS -->
+        <div class="page" id="page-channels">
+            <div class="ptitle">📢 Каналы</div>
+            <div class="psub">Каналы, на которые обязан подписаться пользователь</div>
+            <div class="card">
+                <div class="ctitle">➕ Добавить канал</div>
+                <div class="frow">
+                    <div class="field"><label>Название</label><input id="ch-name" placeholder="Мой канал"></div>
+                    <div class="field"><label>ID (@username или -100…)</label><input id="ch-id" placeholder="@mychannel"></div>
+                </div>
+                <div class="field"><label>Ссылка-инвайт</label><input id="ch-url" placeholder="https://t.me/mychannel"></div>
+                <button class="btn btn-g" onclick="addChannel()">➕ Добавить</button>
+            </div>
+            <div class="card"><div class="ctitle">📋 Список каналов</div><div id="ch-list"></div></div>
+        </div>
+
+        <!-- BROADCAST -->
+        <div class="page" id="page-broadcast">
+            <div class="ptitle">📨 Рассылка</div>
+            <div class="psub">Отправить сообщение всем или конкретному пользователю</div>
+            <div class="card">
+                <div class="ctitle">🎯 Получатели</div>
+                <div class="tabrow">
+                    <div class="tab active" onclick="setTarget('all',this)">🌍 Всем</div>
+                    <div class="tab" onclick="setTarget('single',this)">👤 Конкретному</div>
+                </div>
+                <div id="bc-uid-field" style="display:none" class="field">
+                    <label>ID пользователя</label><input type="number" id="bc-uid" placeholder="123456789">
+                </div>
+                <div class="field"><label>Текст (поддерживается HTML)</label>
+                    <textarea id="bc-text" placeholder="Текст рассылки...&#10;Поддерживается &lt;b&gt;жирный&lt;/b&gt;, &lt;i&gt;курсив&lt;/i&gt;"></textarea>
+                </div>
+                <button class="btn btn-p" onclick="sendBroadcast()">🚀 Отправить</button>
+                <span id="bc-res" style="margin-left:14px;font-size:.82rem;color:var(--g)"></span>
+            </div>
+        </div>
+
+        <!-- REPLY -->
+        <div class="page" id="page-reply">
+            <div class="ptitle">💬 Ответ пользователю</div>
+            <div class="psub">Написать напрямую конкретному участнику</div>
+            <div class="card">
+                <div class="field"><label>ID пользователя</label><input type="number" id="rp-uid" placeholder="123456789"></div>
+                <div class="field"><label>Текст</label><textarea id="rp-text" placeholder="Введите ответ..."></textarea></div>
+                <button class="btn btn-p" onclick="sendReply()">📤 Отправить</button>
+            </div>
+            <div class="card">
+                <div class="ctitle">👥 Быстрый выбор из участников</div>
+                <div id="reply-users"></div>
+            </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="page" id="page-users">
+            <div class="ptitle">👥 Участники</div>
+            <div class="psub">Управление пользователями и банами</div>
+            <div class="card">
+                <div class="tw">
+                    <table>
+                        <thead><tr>
+                            <th>Пользователь</th><th>ID</th><th>Роль</th><th>Статус</th><th>В канале</th><th>Дата</th><th>Действия</th>
+                        </tr></thead>
+                        <tbody id="users-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="page" id="page-settings">
+            <div class="ptitle">⚙️ Настройки</div>
+            <div class="psub">Конфигурация бота</div>
+            <div class="card">
+                <div class="ctitle">🔗 Ссылка на файл</div>
+                <div class="field"><input id="s-url" placeholder="https://..."></div>
+            </div>
+            <div class="card">
+                <div class="ctitle">💬 Текст команды /start</div>
+                <div class="field">
+                    <label>Сообщение при /start (HTML поддерживается)</label>
+                    <textarea id="s-start-text" style="min-height:120px" placeholder="👋 Привет! Подпишись на каналы ниже, чтобы получить файл."></textarea>
+                </div>
+                <div style="background:var(--inp);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--br)">
+                    <div style="font-size:.75rem;color:var(--mt);margin-bottom:6px">👁 Предпросмотр кнопок подписки</div>
+                    <div id="btn-preview"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="ctitle">⏰ Ожидание перед выдачей ссылки</div>
+                <div class="trow">
+                    <div><div class="tl">Включить ожидание</div><div class="ts">Пользователь будет ждать перед получением</div></div>
+                    <label class="sw"><input type="checkbox" id="s-wait-on" onchange="toggleWait()"><span class="sl2"></span></label>
+                </div>
+                <div id="wait-field" style="display:none;margin-top:14px" class="field">
+                    <label>Время ожидания (минут)</label>
+                    <input type="number" id="s-wait-min" min="1" placeholder="30">
+                </div>
+            </div>
+            <div class="card">
+                <div class="ctitle">🗑 Авто-удаление ссылки</div>
+                <div class="trow">
+                    <div><div class="tl">Удалять ссылку после отправки</div>
+                        <div class="ts">Через указанное время ссылка удалится, пользователь получит уведомление</div></div>
+                    <label class="sw"><input type="checkbox" id="s-del-on" onchange="toggleDel()"><span class="sl2"></span></label>
+                </div>
+                <div id="del-field" style="display:none;margin-top:14px" class="field">
+                    <label>Через сколько секунд удалять (напр. 120 = 2 минуты)</label>
+                    <input type="number" id="s-del-secs" min="10" placeholder="120">
+                </div>
+            </div>
+            <button class="btn btn-p" onclick="saveSettings()">💾 Сохранить всё</button>
+        </div>
+
+        <!-- ADMINS -->
+        <div class="page" id="page-admins">
+            <div class="ptitle">🛡️ Администраторы</div>
+            <div class="psub">Управление доступом к панели</div>
+            <div class="card">
+                <div class="ctitle">➕ Добавить администратора</div>
+                <div class="frow">
+                    <div class="field"><label>Логин</label><input id="new-adm-login" placeholder="newadmin"></div>
+                    <div class="field"><label>Пароль</label><input type="password" id="new-adm-pw" placeholder="Минимум 4 символа"></div>
+                </div>
+                <button class="btn btn-g" onclick="addAdmin()">➕ Добавить</button>
+            </div>
+            <div class="card">
+                <div class="ctitle">👥 Список администраторов</div>
+                <div id="adm-list"></div>
+            </div>
+            <div class="card">
+                <div class="ctitle">🔑 Сменить пароль</div>
+                <div class="field"><label>Новый пароль</label><input type="password" id="chpw-new" placeholder="Новый пароль"></div>
+                <div class="field"><label>Повторите пароль</label><input type="password" id="chpw-rep" placeholder="Повторите пароль"></div>
+                <button class="btn btn-p" onclick="changeMyPw()">🔑 Сменить свой пароль</button>
+            </div>
+        </div>
+
+        <!-- LOGS -->
+        <div class="page" id="page-logs">
+            <div class="ptitle">🖥️ Консоль</div>
+            <div class="psub">Лог событий бота в реальном времени</div>
+            <div style="display:flex;gap:8px;margin-bottom:14px">
+                <button class="btn btn-o btn-sm" onclick="loadLogs()">🔄 Обновить</button>
+                <button class="btn btn-o btn-sm" onclick="clearCon()">🗑 Очистить</button>
+            </div>
+            <div class="console">
+                <div class="ch2">
+                    <div class="cd r"></div><div class="cd y"></div><div class="cd g"></div>
+                    <span class="ctit">bot — консоль событий</span>
+                </div>
+                <div class="cb" id="con-body">
+                    <div class="ll"><span class="lt">— старт —</span><span class="lb info">ИНФО</span><span class="lm">🌸 Консоль готова к работе</span></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+<div id="toast"></div>
+
+<script>
+    let bcTarget='all', meLogin='', meSuper=false;
+
+    async function api(path,opts={}){
+      try{
+        const r=await fetch(path,opts);
+        if(r.status===401){window.location.href='/login';return null}
+        return await r.json()
+      }catch{return null}
+    }
+
+    async function logout(){
+      await fetch('/api/logout',{method:'POST'});
+      window.location.href='/login';
+    }
+
+    function toast(msg,ok=true){
+      const t=document.getElementById('toast');
+      t.innerHTML=(ok?'✅ ':'❌ ')+msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),3200);
+    }
+
+    function go(name,el){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+      document.getElementById('page-'+name).classList.add('active');
+      el.classList.add('active');
+      if(name==='logs') loadLogs();
+      if(name==='users') renderUsers();
+      if(name==='reply') renderReplyUsers();
+      if(name==='settings') loadSettings();
+      if(name==='admins') loadAdmins();
+      if(name==='channels') loadChannels();
+    }
+
+    function setTarget(t,el){
+      bcTarget=t;
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('bc-uid-field').style.display=t==='single'?'block':'none';
+    }
+
+    function toggleWait(){document.getElementById('wait-field').style.display=document.getElementById('s-wait-on').checked?'block':'none'}
+    function toggleDel(){document.getElementById('del-field').style.display=document.getElementById('s-del-on').checked?'block':'none'}
+    function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+    async function loadAll(){
+      const me=await api('/api/me');
+      if(me){
+        meLogin=me.login; meSuper=me.super;
+        document.getElementById('role-tag').textContent=me.super?'👑 Суперадмин':'🛡️ Админ';
+        if(!me.super) document.getElementById('nav-admins').style.display='none';
+      }
+      const d=await api('/api/data');
+      if(!d)return;
+      document.getElementById('d-url').value=d.file_url||'';
+      renderDashChannels(d.channels||[]);
+      loadStats();
+    }
+
+    async function loadStats(){
+      const s=await api('/api/stats');
+      if(!s)return;
+      document.getElementById('st-total').textContent=s.total;
+      document.getElementById('st-sub').textContent=s.subscribed;
+      document.getElementById('st-inch').textContent=s.in_channel??'—';
+      document.getElementById('st-banned').textContent=s.banned;
+      document.getElementById('subCount').textContent=s.subscribed;
+    }
+
+    function renderDashChannels(chs){
+      const el=document.getElementById('dash-channels');
+      if(!chs.length){el.innerHTML='<div class="empty"><div class="ei">📭</div>Каналы не добавлены</div>';return}
+      el.innerHTML=chs.map(c=>`<div class="chi">
+        <div class="ch-icon">📢</div>
+        <div style="flex:1"><div class="ch-name">${esc(c.name)}</div><div class="ch-id">${esc(c.id)}</div></div>
+        <span class="badge bg">Активен</span></div>`).join('');
+    }
+
+    async function saveQuick(){
+      await api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({file_url:document.getElementById('d-url').value.trim()})});
+      toast('Ссылка сохранена!');
+    }
+
+    async function loadChannels(){
+      const d=await api('/api/data');if(!d)return;
+      renderChannelList(d.channels||[]);
+    }
+
+    function renderChannelList(chs){
+      const el=document.getElementById('ch-list');
+      if(!chs.length){el.innerHTML='<div class="empty"><div class="ei">📭</div>Нет каналов</div>';return}
+      el.innerHTML=chs.map((c,i)=>`<div class="chi">
+        <div class="ch-icon">📢</div>
+        <div style="flex:1"><div class="ch-name">${esc(c.name)}</div>
+          <div class="ch-id">${esc(c.id)} · <a href="${esc(c.url)}" target="_blank" style="color:var(--r)">Открыть</a></div></div>
+        <button class="btn btn-d btn-sm" onclick="removeChannel(${i})">🗑</button></div>`).join('');
+    }
+
+    async function addChannel(){
+      const name=document.getElementById('ch-name').value.trim();
+      const id=document.getElementById('ch-id').value.trim();
+      const url=document.getElementById('ch-url').value.trim();
+      if(!name||!id){toast('Заполните название и ID',false);return}
+      const d=await api('/api/data');
+      d.channels.push({name,id,url:url||`https://t.me/${id.replace('@','')}`});
+      await api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channels:d.channels})});
+      ['ch-name','ch-id','ch-url'].forEach(x=>document.getElementById(x).value='');
+      toast('Канал добавлен!');loadAll();renderChannelList(d.channels);renderBtnPreview(d.channels);
+    }
+
+    async function removeChannel(i){
+      const d=await api('/api/data');
+      d.channels.splice(i,1);
+      await api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channels:d.channels})});
+      toast('Канал удалён');loadAll();renderChannelList(d.channels);renderBtnPreview(d.channels);
+    }
+
+    async function loadSettings(){
+      const d=await api('/api/data');if(!d)return;
+      document.getElementById('s-url').value=d.file_url||'';
+      document.getElementById('s-start-text').value=d.start_text||'';
+      document.getElementById('s-wait-on').checked=!!d.wait_enabled;
+      document.getElementById('s-wait-min').value=d.wait_minutes||'';
+      document.getElementById('wait-field').style.display=d.wait_enabled?'block':'none';
+      const ds=d.link_delete_seconds||0;
+      document.getElementById('s-del-on').checked=ds>0;
+      document.getElementById('s-del-secs').value=ds>0?ds:120;
+      document.getElementById('del-field').style.display=ds>0?'block':'none';
+      renderBtnPreview(d.channels||[]);
+    }
+
+    function renderBtnPreview(chs){
+      const el=document.getElementById('btn-preview');
+      if(!chs||!chs.length){el.innerHTML='<span style="color:var(--mt);font-size:.82rem">Каналы не добавлены — кнопок не будет</span>';return}
+      el.innerHTML=chs.map((c,i)=>`<div style="display:inline-block;margin:4px;padding:7px 14px;background:var(--grad);color:#fff;border-radius:20px;font-size:.8rem;font-weight:600">📢 Подпишись #${i+1} — ${esc(c.name)}</div>`).join('')+
+        `<div style="display:inline-block;margin:4px;padding:7px 14px;background:#1e2535;color:#2ecc71;border-radius:20px;font-size:.8rem;font-weight:600;border:1px solid rgba(46,204,113,.3)">✅ Я подписался!</div>`;
+    }
+
+    async function saveSettings(){
+      const delOn=document.getElementById('s-del-on').checked;
+      await api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        file_url:document.getElementById('s-url').value.trim(),
+        start_text:document.getElementById('s-start-text').value.trim(),
+        wait_enabled:document.getElementById('s-wait-on').checked,
+        wait_minutes:parseInt(document.getElementById('s-wait-min').value)||0,
+        link_delete_seconds:delOn?(parseInt(document.getElementById('s-del-secs').value)||120):0,
+      })});
+      toast('Настройки сохранены!');
+    }
+
+    async function sendBroadcast(){
+      const text=document.getElementById('bc-text').value.trim();
+      if(!text){toast('Введите текст!',false);return}
+      const target=bcTarget==='single'?document.getElementById('bc-uid').value:'all';
+      const r=await api('/api/broadcast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,target})});
+      if(r){document.getElementById('bc-res').textContent=`✅ Отправлено: ${r.sent}, ошибок: ${r.errors}`;toast(`Рассылка: ${r.sent} получателей`)}
+    }
+
+    async function sendReply(){
+      const uid=document.getElementById('rp-uid').value;
+      const text=document.getElementById('rp-text').value.trim();
+      if(!uid||!text){toast('Заполните ID и текст',false);return}
+      const r=await api('/api/reply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,text})});
+      if(r&&r.ok){toast('Ответ отправлен!');document.getElementById('rp-text').value=''}
+      else toast('Ошибка: '+(r?.error||'?'),false);
+    }
+
+    function pickUser(uid){document.getElementById('rp-uid').value=uid;toast('ID выбран: '+uid)}
+
+    async function renderReplyUsers(){
+      const d=await api('/api/data');if(!d)return;
+      const users=Object.values(d.users||{}).slice(0,15);
+      const el=document.getElementById('reply-users');
+      if(!users.length){el.innerHTML='<div class="empty"><div class="ei">👤</div>Нет пользователей</div>';return}
+      el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:7px">'+
+        users.map(u=>`<button class="btn btn-o btn-sm" onclick="pickUser(${u.id})">👤 ${esc(u.first_name||'—')} <span style="color:var(--mt)">(${u.id})</span></button>`).join('')+'</div>';
+    }
+
+    async function renderUsers(){
+      const d=await api('/api/data');if(!d)return;
+      const banned=d.banned||[];
+      const users=Object.values(d.users||{});
+      const tb=document.getElementById('users-tbody');
+      if(!users.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--mt);padding:28px">Нет пользователей</td></tr>';return}
+      tb.innerHTML=users.map(u=>{
+        const ib=banned.includes(u.id);
+        return`<tr>
+          <td><b>${esc(u.first_name||'—')}</b><br><span style="color:var(--mt);font-size:.75rem">@${esc(u.username||'нет')}</span></td>
+          <td><code>${u.id}</code></td>
+          <td><span class="badge ${u.role==='admin'?'bo':'bgr'}">${u.role==='admin'?'👑 Админ':'👤 Участник'}</span></td>
+          <td>${ib?'<span class="badge br2">🚫 Бан</span>':u.subscribed?'<span class="badge bg">✅ Подписан</span>':'<span class="badge bgr">⏳ Ожидает</span>'}</td>
+          <td>${u.in_channel?'<span class="badge bbl">📡 Да</span>':'<span class="badge bgr">—</span>'}</td>
+          <td style="color:var(--mt);font-size:.78rem">${esc(u.joined||'—')}</td>
+          <td><div style="display:flex;gap:5px;flex-wrap:wrap">
+            <button class="btn btn-o btn-sm" onclick="pickUser(${u.id});go('reply',document.querySelector('[onclick*=reply]'))">💬</button>
+            ${ib?`<button class="btn btn-g btn-sm" onclick="banUser(${u.id},'unban')">✅ Разбан</button>`
+                :`<button class="btn btn-d btn-sm" onclick="banUser(${u.id},'ban')">🚫 Бан</button>`}
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function banUser(uid,action){
+      await api('/api/ban',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,action})});
+      toast(action==='ban'?'🚫 Заблокирован':'✅ Разблокирован');
+      renderUsers();loadStats();
+    }
+
+    // ── Admins ──
+    async function loadAdmins(){
+      const list=await api('/api/admins');
+      const el=document.getElementById('adm-list');
+      if(!list||!list.length){el.innerHTML='<div class="empty"><div class="ei">🛡️</div>Нет администраторов</div>';return}
+      el.innerHTML=list.map(a=>`<div class="adm-item">
+        <div class="adm-avatar">${esc(a.login[0].toUpperCase())}</div>
+        <div style="flex:1">
+          <div class="adm-name">${esc(a.login)} ${a.super?'<span class="badge bo" style="font-size:.65rem">👑 Супер</span>':''}</div>
+          <div class="adm-sub">Добавлен: ${esc(a.created)}</div>
+        </div>
+        ${!a.super && a.login!==meLogin
+          ?`<button class="btn btn-d btn-sm" onclick="removeAdmin('${esc(a.login)}')">🗑 Удалить</button>`
+          :`<span class="badge bgr" style="font-size:.7rem">защищён</span>`}
+      </div>`).join('');
+    }
+
+    async function addAdmin(){
+      const login=document.getElementById('new-adm-login').value.trim();
+      const password=document.getElementById('new-adm-pw').value.trim();
+      if(!login||!password){toast('Заполните логин и пароль',false);return}
+      const r=await api('/api/admins/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login,password})});
+      if(r?.ok){toast('Администратор добавлен!');document.getElementById('new-adm-login').value='';document.getElementById('new-adm-pw').value='';loadAdmins()}
+      else toast(r?.error||'Ошибка',false);
+    }
+
+    async function removeAdmin(login){
+      if(!confirm(`Удалить администратора «${login}»?`))return;
+      const r=await api('/api/admins/remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login})});
+      if(r?.ok){toast('Администратор удалён');loadAdmins()}
+      else toast(r?.error||'Ошибка',false);
+    }
+
+    async function changeMyPw(){
+      const pw=document.getElementById('chpw-new').value.trim();
+      const rep=document.getElementById('chpw-rep').value.trim();
+      if(!pw){toast('Введите новый пароль',false);return}
+      if(pw!==rep){toast('Пароли не совпадают',false);return}
+      if(pw.length<4){toast('Пароль слишком короткий (мин. 4 символа)',false);return}
+      const r=await api('/api/admins/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+      if(r?.ok){toast('Пароль изменён!');document.getElementById('chpw-new').value='';document.getElementById('chpw-rep').value=''}
+      else toast(r?.error||'Ошибка',false);
+    }
+
+    // ── Logs ──
+    async function loadLogs(){
+      const logs=await api('/api/logs');
+      const body=document.getElementById('con-body');
+      if(!logs||!logs.length){body.innerHTML='<div class="ll"><span class="lt">—</span><span class="lb info">ИНФО</span><span class="lm" style="color:#374151">Событий пока нет...</span></div>';return}
+      const lmap={INFO:['info','ИНФО'],WARN:['warn','ВНИМАНИЕ'],ERROR:['error','ОШИБКА']};
+      body.innerHTML=[...logs].reverse().map(l=>{
+        const[cls,label]=lmap[l.level]||['info','ИНФО'];
+        return`<div class="ll"><span class="lt">${esc(l.time)}</span><span class="lb ${cls}">${label}</span><span class="lm">${esc(l.message)}</span>${l.user_id?`<span class="lu">uid:${l.user_id}</span>`:''}</div>`;
+      }).join('');
+      document.querySelector('.console').scrollTop=0;
+    }
+
+    function clearCon(){
+      document.getElementById('con-body').innerHTML='<div class="ll"><span class="lt">— очищено —</span><span class="lb info">ИНФО</span><span class="lm">🌸 Консоль очищена</span></div>';
+    }
+
+    // Init
+    loadAll();
+    setInterval(loadStats,30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 ApexDLC — Вход</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+          --r:#ff4d6d;--g:#2ecc71;
+          --bg:#0e1015;--card:#161b24;--inp:#0a0d12;--tx:#e8eaf0;--mt:#6b7280;
+          --br:rgba(255,77,109,.18);
+          --grad:linear-gradient(135deg,#ff4d6d 0%,#c0392b 35%,#27ae60 70%,#1a6e40 100%);
+        }
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);
+          min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .petal{position:fixed;border-radius:50% 0 50% 0;opacity:.1;animation:fall linear infinite;pointer-events:none}
+        @keyframes fall{0%{transform:translateY(-40px) rotate(0);opacity:.14}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+        body::before{content:'';position:fixed;inset:0;
+          background:radial-gradient(ellipse at 30% 40%,rgba(255,77,109,.07),transparent 55%),
+                     radial-gradient(ellipse at 70% 70%,rgba(46,204,113,.07),transparent 55%);
+          pointer-events:none}
+        .box{position:relative;z-index:10;background:var(--card);border:1px solid var(--br);border-radius:24px;
+          padding:44px 40px 36px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.5);
+          animation:up .4s cubic-bezier(.34,1.56,.64,1)}
+        @keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+        .logo{text-align:center;margin-bottom:28px}
+        .logo-icon{font-size:2.8rem;display:block;margin-bottom:8px;animation:rock 6s ease-in-out infinite}
+        @keyframes rock{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+        .logo-text{font-family:'Playfair Display',serif;font-size:1.6rem;
+          background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .logo-sub{font-size:.82rem;color:var(--mt);margin-top:4px}
+        .field{margin-bottom:16px}
+        label{display:block;font-size:.72rem;font-weight:600;margin-bottom:6px;
+          color:#9ca3af;text-transform:uppercase;letter-spacing:.06em}
+        .inp-wrap{position:relative}
+        .inp-wrap .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none}
+        input{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--br);border-radius:12px;
+          font-size:.9rem;font-family:'DM Sans',sans-serif;color:var(--tx);background:var(--inp);outline:none;transition:all .2s}
+        input:focus{border-color:rgba(255,77,109,.5);box-shadow:0 0 0 3px rgba(255,77,109,.08)}
+        .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+          background:none;border:none;cursor:pointer;color:var(--mt);font-size:.95rem;padding:4px;transition:color .2s}
+        .eye:hover{color:var(--r)}
+        .btn-login{width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;
+          font-size:.95rem;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--grad);color:#fff;
+          box-shadow:0 4px 20px rgba(255,77,109,.3);transition:all .2s;margin-top:6px;
+          display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,77,109,.4)}
+        .btn-login.loading{opacity:.7;pointer-events:none}
+        .err{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);
+          color:#ff6b85;border-radius:10px;padding:10px 14px;font-size:.84rem;
+          margin-top:14px;display:none;text-align:center}
+        .err.show{display:block;animation:shake .3s ease}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        .hint{text-align:center;margin-top:20px;font-size:.78rem;color:#374151;line-height:1.6}
+    </style>
+</head>
+<body>
+<script>
+    const pc=['#ff4d6d','#2ecc71','#ff6b85','#a8f0c6'];
+    for(let i=0;i<14;i++){
+      const p=document.createElement('div');p.className='petal';
+      p.style.cssText=`left:${Math.random()*100}%;background:${pc[i%pc.length]};animation-duration:${9+Math.random()*11}s;animation-delay:${Math.random()*8}s;width:${7+Math.random()*8}px;height:${10+Math.random()*12}px;`;
+      document.body.appendChild(p);
+    }
+</script>
+<div class="box">
+    <div class="logo">
+        <span class="logo-icon">🌸</span>
+        <div class="logo-text">ApexDLC</div>
+        <div class="logo-sub">Панель управления ботом</div>
+    </div>
+    <div class="field">
+        <label>Логин</label>
+        <div class="inp-wrap">
+            <span class="ico">👤</span>
+            <input type="text" id="login" placeholder="Введите логин" autocomplete="username">
+        </div>
+    </div>
+    <div class="field">
+        <label>Пароль</label>
+        <div class="inp-wrap">
+            <span class="ico">🔒</span>
+            <input type="password" id="password" placeholder="Введите пароль" autocomplete="current-password">
+            <button class="eye" type="button" onclick="togglePwd()" id="eye-btn">👁</button>
+        </div>
+    </div>
+    <button class="btn-login" id="btn" onclick="doLogin()">
+        <span id="btn-text">🚀 Войти</span>
+    </button>
+    <div class="err" id="err"></div>
+    <div class="hint">Добро пожаловать в панель управления</div>
+</div>
+<script>
+    const loginEl=document.getElementById('login');
+    const pwdEl=document.getElementById('password');
+    const errEl=document.getElementById('err');
+    const btnEl=document.getElementById('btn');
+    const btnTxt=document.getElementById('btn-text');
+
+    function togglePwd(){
+      const show=pwdEl.type==='password';
+      pwdEl.type=show?'text':'password';
+      document.getElementById('eye-btn').textContent=show?'🙈':'👁';
+    }
+
+    async function doLogin(){
+      const login=loginEl.value.trim();
+      const password=pwdEl.value;
+      if(!login||!password){showErr('Заполните все поля');return}
+      btnEl.classList.add('loading');
+      btnTxt.textContent='⏳ Проверяем...';
+      errEl.classList.remove('show');
+      try{
+        const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({login,password})});
+        const d=await r.json();
+        if(d.ok){btnTxt.textContent='✅ Вход...';window.location.href='/'}
+        else showErr(d.error||'Неверный логин или пароль');
+      }catch{showErr('Ошибка соединения с сервером')}
+      finally{btnEl.classList.remove('loading');if(btnTxt.textContent==='⏳ Проверяем...') btnTxt.textContent='🚀 Войти'}
+    }
+
+    function showErr(msg){
+      errEl.textContent='❌ '+msg;
+      errEl.classList.remove('show');
+      void errEl.offsetWidth;
+      errEl.classList.add('show');
+      btnTxt.textContent='🚀 Войти';
+      btnEl.classList.remove('loading');
+    }
+
+    [loginEl,pwdEl].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()}));
+    loginEl.focus();
+</script>
+</body>
+</html>
